@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark" data-lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tektik.la — link kısalt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --text2: #888;
+    --accent: #c8f530;
+    --accent2: #a0d020;
+    --card: #141414;
+    --input-bg: #0f0f0f;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f5f0;
+    --bg2: #eeede8;
+    --bg3: #e5e4de;
+    --border: #d0cfc8;
+    --text: #111111;
+    --text2: #666;
+    --accent: #1a6b00;
+    --accent2: #2a8b10;
+    --card: #ffffff;
+    --input-bg: #fafaf8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: linear-gradient(var(--text) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--text) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+  .content { position: relative; z-index: 1; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .logo span { color: var(--accent); }
+
+  .header-controls { display: flex; gap: 10px; align-items: center; }
+
+  .ctrl-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .ctrl-btn:hover, .ctrl-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hero {
+    padding: 70px 40px 50px;
+    max-width: 860px;
+    margin: 0 auto;
+    animation: fadeUp 0.6s ease;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+  h1 {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 16px;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 420px;
+    line-height: 1.7;
+  }
+
+  .main-card {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+  }
+
+  .card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  input[type="url"], input[type="text"] {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 15px 18px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--text2); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+    border: none;
+    padding: 15px 28px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    min-width: 110px;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--accent2); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* RESULT BOX */
+  .result-box {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    align-items: center;
+    gap: 16px;
+    animation: fadeUp 0.3s ease;
+  }
+  .result-box.show { display: flex; }
+
+  .result-url {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 700;
+    flex: 1;
+    word-break: break-all;
+  }
+
+  .result-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 6px;
+  }
+
+  /* STATUS */
+  .status {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+  .status.error { display: block; background: rgba(255,80,80,0.1); color: #ff6060; border: 1px solid rgba(255,80,80,0.2); }
+  .status.loading { display: block; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+
+  /* HISTORY */
+  .history-section {
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+  .history-section.show { display: block; }
+
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .history-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .history-item:last-child { border-bottom: none; }
+
+  .history-left { flex: 1; overflow: hidden; }
+  .history-original {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+  .history-short {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .history-clicks {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  /* INFO BADGE */
+  .info-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 8px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    .hero, .main-card { padding-left: 20px; padding-right: 20px; }
+    .input-row { flex-direction: column; }
+    h1 { letter-spacing: -1px; }
+    .card { padding: 24px; }
+    .result-box { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="content">
+  <header>
+    <div class="logo">tektik<span>.la</span></div>
+    <div class="header-controls">
+      <button class="ctrl-btn active" id="btn-tr" onclick="setLang('tr')">TR</button>
+      <button class="ctrl-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="ctrl-btn" onclick="toggleTheme()">◐</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-tag" id="hero-tag">link kısaltıcı</div>
+    <h1 id="hero-h1">uzun linkleri<br><em>kısa</em> yap</h1>
+    <p class="hero-sub" id="hero-sub">Ücretsiz, reklamsız, kayıt gerektirmez. Linkler 30 gün geçerlidir.</p>
+  </div>
+
+  <div class="main-card">
+    <div class="card">
+      <div class="card-label" id="card-label">Linkinizi kısaltın</div>
+
+      <div class="input-row">
+        <input type="url" id="url-input" placeholder="https://uzun-bir-adres.com/cok/uzun/bir/yol" />
+        <button class="btn-primary" id="shorten-btn" onclick="shortenLink()">
+          <span id="btn-text">Kısalt</span>
+        </button>
+      </div>
+
+      <div class="status" id="status-msg"></div>
+
+      <div class="result-box" id="result-box">
+        <div style="flex:1">
+          <div class="result-url" id="result-url"></div>
+          <div class="result-meta" id="result-meta"></div>
+        </div>
+        <button class="btn-primary" id="copy-btn" onclick="copyResult()">Kopyala</button>
+      </div>
+
+      <div class="info-badge" id="info-badge">
+        ⏱ <span id="info-text">Linkler 30 gün sonra otomatik silinir</span>
+      </div>
+
+      <div class="history-section" id="history-section">
+        <div class="history-header">
+          <div class="history-title" id="history-title">Bu oturumdaki linkler</div>
+          <button class="btn-ghost" onclick="clearHistory()" id="clear-btn">Temizle</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>tektik.la</p>
+    <p id="footer-text">© 2025 — Tüm araçlar ücretsiz</p>
+  </footer>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://yxeuthrfqdquqgzwuxvm.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_O4VYFOGfeqjd1ctSMseamg_j3TKgf12';
+
+// ── LANG ──────────────────────────────────────────────
+const tx = {
+  tr: {
+    heroTag: 'link kısaltıcı',
+    heroH1: 'uzun linkleri<br><em>kısa</em> yap',
+    heroSub: 'Ücretsiz, reklamsız, kayıt gerektirmez. Linkler 30 gün geçerlidir.',
+    cardLabel: 'Linkinizi kısaltın',
+    btnText: 'Kısalt',
+    copyBtn: 'Kopyala',
+    copied: '✓ Kopyalandı',
+    historyTitle: 'Bu oturumdaki linkler',
+    clearBtn: 'Temizle',
+    infoText: 'Linkler 30 gün sonra otomatik silinir',
+    footerText: '© 2025 — Tüm araçlar ücretsiz',
+    loading: '⏳ Kısaltılıyor...',
+    errEmpty: '⚠ Lütfen bir link girin.',
+    errInvalid: '⚠ Geçerli bir URL girin. (https:// ile başlamalı)',
+    errServer: '⚠ Bir hata oluştu. Lütfen tekrar deneyin.',
+    placeholder: 'https://uzun-bir-adres.com/cok/uzun/bir/yol',
+    clicksText: (n) => `${n} tıklanma`,
+    expiresText: (d) => `30 gün geçerli · ${d} tarihine kadar`,
+  },
+  en: {
+    heroTag: 'link shortener',
+    heroH1: 'make long links<br><em>short</em>',
+    heroSub: 'Free, no ads, no signup required. Links valid for 30 days.',
+    cardLabel: 'Shorten your link',
+    btnText: 'Shorten',
+    copyBtn: 'Copy',
+    copied: '✓ Copied',
+    historyTitle: 'Links this session',
+    clearBtn: 'Clear',
+    infoText: 'Links are automatically deleted after 30 days',
+    footerText: '© 2025 — All tools free',
+    loading: '⏳ Shortening...',
+    errEmpty: '⚠ Please enter a URL.',
+    errInvalid: '⚠ Enter a valid URL (must start with https://)',
+    errServer: '⚠ Something went wrong. Please try again.',
+    placeholder: 'https://your-long-link.com/very/long/path',
+    clicksText: (n) => `${n} clicks`,
+    expiresText: (d) => `Valid 30 days · until ${d}`,
+  }
+};
+
+let lang = 'tr';
+let theme = 'dark';
+let sessionHistory = [];
+let lastShortUrl = '';
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-tr').classList.toggle('active', l === 'tr');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  const t = tx[l];
+  document.getElementById('hero-tag').textContent = t.heroTag;
+  document.getElementById('hero-h1').innerHTML = t.heroH1;
+  document.getElementById('hero-sub').textContent = t.heroSub;
+  document.getElementById('card-label').textContent = t.cardLabel;
+  document.getElementById('btn-text').textContent = t.btnText;
+  document.getElementById('copy-btn').textContent = t.copyBtn;
+  document.getElementById('history-title').textContent = t.historyTitle;
+  document.getElementById('clear-btn').textContent = t.clearBtn;
+  document.getElementById('info-text').textContent = t.infoText;
+  document.getElementById('footer-text').textContent = t.footerText;
+  document.getElementById('url-input').placeholder = t.placeholder;
+}
+
+function toggleTheme() {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function isValidUrl(str) {
+  try {
+    const u = new URL(str);
+    return u.protocol === 'https:' || u.protocol === 'http:';
+  } catch { return false; }
+}
+
+function generateSlug() {
+  const chars = 'abcdefghijkmnpqrstuvwxyz23456789';
+  let s = '';
+  for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg;
+  el.className = 'status ' + type;
+}
+
+function clearStatus() {
+  const el = document.getElementById('status-msg');
+  el.className = 'status';
+}
+
+// ── SUPABASE ───────────────────────────────────────────
+async function supabaseInsert(slug, url) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/links`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify({
+      slug,
+      original_url: url
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Insert failed');
+  }
+  return await res.json();
+}
+
+async function supabaseCheckSlug(slug) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/links?slug=eq.${slug}&select=slug`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  const data = await res.json();
+  return data.length > 0;
+}
+
+// ── SHORTEN ────────────────────────────────────────────
+async function shortenLink() {
+  const input = document.getElementById('url-input');
+  const url = input.value.trim();
+  const btn = document.getElementById('shorten-btn');
+  const t = tx[lang];
+
+  clearStatus();
+  document.getElementById('result-box').classList.remove('show');
+
+  if (!url) { setStatus(t.errEmpty, 'error'); return; }
+  if (!isValidUrl(url)) { setStatus(t.errInvalid, 'error'); return; }
+
+  btn.disabled = true;
+  document.getElementById('btn-text').textContent = '...';
+  setStatus(t.loading, 'loading');
+
+  try {
+    // Generate unique slug
+    let slug = generateSlug();
+    let attempts = 0;
+    while (await supabaseCheckSlug(slug) && attempts < 5) {
+      slug = generateSlug();
+      attempts++;
+    }
+
+    await supabaseInsert(slug, url);
+
+    const shortUrl = `tektik.la/${slug}`;
+    lastShortUrl = shortUrl;
+
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 30);
+    const expiresStr = expires.toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-GB');
+
+    document.getElementById('result-url').textContent = shortUrl;
+    document.getElementById('result-meta').textContent = t.expiresText(expiresStr);
+    document.getElementById('result-box').classList.add('show');
+    document.getElementById('copy-btn').textContent = t.copyBtn;
+    clearStatus();
+
+    // Add to session history
+    sessionHistory.unshift({ original: url, short: shortUrl, clicks: 0 });
+    renderHistory();
+
+    input.value = '';
+  } catch (e) {
+    setStatus(t.errServer, 'error');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    document.getElementById('btn-text').textContent = tx[lang].btnText;
+  }
+}
+
+async function copyResult() {
+  const text = document.getElementById('result-url').textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = tx[lang].copied;
+    setTimeout(() => btn.textContent = tx[lang].copyBtn, 2000);
+  } catch {}
+}
+
+function renderHistory() {
+  const section = document.getElementById('history-section');
+  const list = document.getElementById('history-list');
+  if (sessionHistory.length === 0) { section.classList.remove('show'); return; }
+  section.classList.add('show');
+  list.innerHTML = sessionHistory.map(item => `
+    <div class="history-item">
+      <div class="history-left">
+        <div class="history-original">${item.original}</div>
+        <div class="history-short">${item.short}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearHistory() {
+  sessionHistory = [];
+  renderHistory();
+  document.getElementById('result-box').classList.remove('show');
+}
+
+// Enter key
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('url-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') shortenLink();
+  });
+});
+</script>
+</body>
+</html>
