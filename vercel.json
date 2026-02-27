@@ -1,7 +1,5 @@
 {
-  "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/:slug", "destination": "/redirect.html" }
+    { "source": "/((?!redirect).*)", "destination": "/index.html" }
   ]
 }
