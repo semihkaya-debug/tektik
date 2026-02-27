@@ -1,6 +1,7 @@
 {
-  "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/([a-z0-9]+)", "dest": "/redirect.html" }
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/:slug", "destination": "/redirect.html" }
   ]
 }
