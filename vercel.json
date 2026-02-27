@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!redirect).*)", "destination": "/index.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/:slug", "destination": "/redirect.html" }
   ]
 }
